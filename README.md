@@ -1,2 +1,2 @@
-# John and Jane Mort
+# Jay Mort
 Sentients
