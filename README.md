@@ -1,2 +1,2 @@
-# Planck
-Discord therapissed chatbot
+# John and Jane Mort
+Sentients
