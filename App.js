@@ -1,5 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import AppLoading from "expo-app-loading";
 
 import {
@@ -28,13 +26,6 @@ import {
 import WelcomeScreen from "./src/Views/StartScreen";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
   let [fontsLoaded] = useFonts({
     Urbanist_100Thin,
     Urbanist_200ExtraLight,
@@ -60,11 +51,7 @@ export default function App() {
     return <AppLoading />;
   } 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return(
+    <WelcomeScreen />
+  );
+}
