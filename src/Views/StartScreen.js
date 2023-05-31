@@ -1,32 +1,45 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import ColorPalette from "../Utils/ColorPalette";
 import Fonts from "../Utils/Fonts";
 import SeparatorComponent from "../Utils/Spacer";
 import { MyButton } from "../Utils/Buttons";
+import { useState } from "react";
+import screensEnum from "../Utils/screens";
+import ChatScreen from "./chatScreen";
 
-export default WelcomeScreen = () => {
-  function startHandler() {
-    console.log("Start Button Pressed");
-  }
-
+const SplashScreen = (props) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleStyle}>Welcome to JMort</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.titleStyle}>Jay M.</Text>
 
-      <SeparatorComponent space={100} />
+      {/* <SeparatorComponent space={100} /> */}
       <MyButton
-        bgColor={ColorPalette.Orange}
+        bgColor={ColorPalette.DarkGrey}
         width={"90%"}
         height={50}
         borderRadius={10}
-        onPress={startHandler}
+        onPress={props.onPressStart}
       >
-        <Text style={styles.buttonText}> Press Me </Text>
+        <Text style={styles.buttonText}>Start</Text>
       </MyButton>
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
+};
+
+export default WelcomeScreen = () => {
+  const [screen, setScreen] = useState(screensEnum.splash);
+
+  function startHandler() {
+    setScreen(screensEnum.chat);
+  }
+
+  if (screen == screensEnum.splash) {
+    return <SplashScreen onPressStart={startHandler} />;
+  } else {
+    return <ChatScreen />;
+  }
 };
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: ColorPalette.white,
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: "15%"
+    marginVertical: "15%",
   },
 
   titleStyle: {
