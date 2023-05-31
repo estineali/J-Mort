@@ -1,4 +1,5 @@
 import AppLoading from "expo-app-loading";
+import { NavigationContainer } from '@react-navigation/native';
 
 import {
   useFonts,
@@ -24,7 +25,6 @@ import {
 
 
 import WelcomeScreen from "./src/Views/StartScreen";
-
 export default function App() {
   let [fontsLoaded] = useFonts({
     Urbanist_100Thin,
@@ -52,6 +52,8 @@ export default function App() {
   } 
 
   return(
-    <WelcomeScreen />
+    <NavigationContainer>
+      <WelcomeScreen />
+    </NavigationContainer>
   );
 }
