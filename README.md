@@ -14,8 +14,14 @@ Sentients
 1. Clone project 
 2. Run `yarn install` in the root directory 
 3. Run `yarn ios` if you have a macbook with the iPhone emulator
-4. Else run `yarn start` and use the Expo Go app (linked above) with the QR Code .
+4. Else run `expo start` and use the Expo Go app (linked above) with the QR Code .
 
+### Packages 
+1. React 18 
+2. React Native 0.71 
+3. Expo 48 
+4. React Navigation `v6` 
+5. OpenAI - GPT3 
 
 ### ToDo 
 
@@ -25,3 +31,4 @@ Sentients
 3. Setup Chatgpt Whisper API 
 5. Implement chat screens 
 4. Make API Calls from user input 
+
