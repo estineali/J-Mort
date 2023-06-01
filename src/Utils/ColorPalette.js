@@ -9,7 +9,7 @@ const ColorPalette = {
   backgroundColor: "#f3f3f3",
 
   chatBubble: "#F4F4F4",
-  chatBubbleAI: "#8696BC",
+  chatBubbleAI: "#8696BC" + "80",
   chatBubbleUser: "#F7F399",
 };
 
