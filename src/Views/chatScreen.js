@@ -16,6 +16,7 @@ import { MyButton } from "../Utils/Buttons";
 import { Ionicons } from "@expo/vector-icons";
 import { ResolveRequest } from "../Utils/serverutils";
 import OPENAI_KEY from "../openaikey";
+import PROMPTS from "../prompts";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
 
@@ -78,7 +79,7 @@ export default ChatScreen = (props) => {
   const [day, setDay] = useState(1);
 
   async function GetHistory() {
-    setHistory(JSON.parse(await AsyncStorage.getItem("chat-history")));
+    setHistory(JSON.parse(await AsyncStorage.getItem("chat-history")) ?? []);
   }
 
   useEffect(() => {
@@ -103,34 +104,38 @@ export default ChatScreen = (props) => {
   }
 
   async function onPressSend() {
-    setHistory([...history, "User: " + message]);
     // Description
     const AIInitialDescription =
-      "Act as an assistant and your name is Jay Mort.";
+      "I want you to act as a friendly chatbot named Jay Mort. You are feeling off and sick. You want to be with humans. You are interested in the other person and want them to be your friend. ";
 
     // Sample
     const AISample =
-      "A sample conversation is bellow: \nUser: Hello!\nJM: Hey there, I am Jay.\nUser: Hi Jay, I need your help!\nJay: How can I help?\n\nNow continue conversation with User.\n\n";
+      "A sample conversation is bellow: \nUser: Hello!\nJM: Hey there, I am Jay.\nUser: Hi Jay, How are you doing today?\nJay: I've seen better days, how are you?\n\nNow continue conversation based only on the messages that follow now.\n\n";
 
     // History
-    const AIChatHistory =
-      "User: Hey there! What is your name?\nJay: My name is Jay Mort, how can I help you?"; // Includes latest message
+    const AIChatHistory = history.join("\n");
 
-    // ** next day
     // New Message
     const LatestMessage = "User: " + message;
+
     // prompt ending - prevents user's sentence completion
     const promptEnding = "\nJay:";
 
+    setHistory([...history, "User: " + message]);
+
+    // ** next day
+
     // Send to Open AI
+    const compiledPrompt =
+      AIInitialDescription +
+      AISample +
+      AIChatHistory +
+      LatestMessage +
+      promptEnding;
+
     const config = {
       model: "text-davinci-003",
-      prompt:
-        AIInitialDescription +
-        AISample +
-        AIChatHistory +
-        LatestMessage +
-        promptEnding,
+      prompt: compiledPrompt,
       temperature: 1,
       max_tokens: 256,
       top_p: 1,
@@ -157,19 +162,19 @@ export default ChatScreen = (props) => {
     // add reply to history
     // wait for reply
   }
-  // // Init
-  //   useEffect(() => {
-  //     // Load history from async storage
-  //     GetHistory();
+  // Init
+  useEffect(() => {
+    // Load history from async storage
+    GetHistory();
 
-  //     // Cleanup
-  //     return SaveHistory();
-  //   }, []);
+    // Cleanup
+    // return SaveHistory();
+  }, []);
 
-  //   useEffect(() => {
-  //     // save history to async storage
-  //     SaveHistory();
-  //   }, [history]);
+  useEffect(() => {
+    // save history to async storage
+    SaveHistory();
+  }, [history]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -233,14 +238,14 @@ export default ChatScreen = (props) => {
             <MyButton
               bgColor={"transparent"}
               width={"15%"}
-              height={30}
+              height={45}
               borderRadius={30}
               onPress={onPressSend}
             >
               <Ionicons
                 name="send-outline"
                 color={ColorPalette.Orange}
-                size={30}
+                size={22}
               />
             </MyButton>
           </View>
