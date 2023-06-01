@@ -11,6 +11,11 @@ import {
 import ColorPalette from "../Utils/ColorPalette";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Fonts from "../Utils/Fonts";
+import Spacer from "../Utils/Spacer";
+import { MyButton } from "../Utils/Buttons";
+import { Ionicons } from "@expo/vector-icons";
+import { ResolveRequest } from "../Utils/serverutils";
+import OPENAI_KEY from "../openaikey";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
 
@@ -30,19 +35,129 @@ const MessageBubble = (props) => {
   );
 };
 
+const TopBar = (props) => {
+  return (
+    <View style={styleSheet.topBar}>
+      <MyButton
+        bgColor={ColorPalette.Orange + "F0"}
+        width={35}
+        height={35}
+        borderRadius={10}
+        onPress={props.onPreviousDay}
+      >
+        <Ionicons
+          name="caret-back-outline"
+          color={ColorPalette.white}
+          size={20}
+        />
+      </MyButton>
+
+      <Text style={{ fontFamily: Fonts.Bold, fontSize: 18 }}>
+        Day {props.day ?? 1}
+      </Text>
+
+      <MyButton
+        bgColor={ColorPalette.Orange + "F0"}
+        width={35}
+        height={35}
+        borderRadius={10}
+        onPress={props.onNextDay}
+      >
+        <Ionicons
+          name="caret-forward-outline"
+          color={ColorPalette.white}
+          size={20}
+        />
+      </MyButton>
+    </View>
+  );
+};
 export default ChatScreen = (props) => {
   const [history, setHistory] = useState([]);
   const [message, setMessage] = useState("");
+  const [day, setDay] = useState(1);
 
   async function GetHistory() {
     setHistory(JSON.parse(await AsyncStorage.getItem("chat-history")));
   }
 
+  useEffect(() => {
+    console.log([...history]);
+  }, [history]);
+
   async function SaveHistory() {
     await AsyncStorage.setItem("chat-history", JSON.stringify(history));
   }
 
-  // Init
+  function nextDayHandler() {
+    setDay(day == 11 ? 11 : day + 1);
+  }
+  function previousDayhandler() {
+    setDay(day == 1 ? 1 : day - 1);
+  }
+
+  function parseHistory() {
+    // Returns a list
+    // put history into one long narrative form i.e. a list
+    // To be displayed
+  }
+
+  async function onPressSend() {
+    setHistory([...history, "User: " + message]);
+    // Description
+    const AIInitialDescription =
+      "Act as an assistant and your name is Jay Mort.";
+
+    // Sample
+    const AISample =
+      "A sample conversation is bellow: \nUser: Hello!\nJM: Hey there, I am Jay.\nUser: Hi Jay, I need your help!\nJay: How can I help?\n\nNow continue conversation with User.\n\n";
+
+    // History
+    const AIChatHistory =
+      "User: Hey there! What is your name?\nJay: My name is Jay Mort, how can I help you?"; // Includes latest message
+
+    // ** next day
+    // New Message
+    const LatestMessage = "User: " + message;
+    // prompt ending - prevents user's sentence completion
+    const promptEnding = "\nJay:";
+
+    // Send to Open AI
+    const config = {
+      model: "text-davinci-003",
+      prompt:
+        AIInitialDescription +
+        AISample +
+        AIChatHistory +
+        LatestMessage +
+        promptEnding,
+      temperature: 1,
+      max_tokens: 256,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    };
+
+    ResolveRequest({
+      token: OPENAI_KEY,
+      method: "POST",
+      url: "https://api.openai.com/v1/completions",
+      body: config,
+    }).then((result) => {
+      console.log(result.choices[0].text);
+      setHistory([
+        ...history,
+        "User: " + message,
+        "Jay:" + result.choices[0].text,
+      ]);
+    });
+    //Reset message
+    setMessage("");
+
+    // add reply to history
+    // wait for reply
+  }
+  // // Init
   //   useEffect(() => {
   //     // Load history from async storage
   //     GetHistory();
@@ -57,47 +172,96 @@ export default ChatScreen = (props) => {
   //   }, [history]);
 
   return (
-    <KeyboardAvoidingView style={styleSheet.screenContainer}>
-      <ScrollView
-        style={{
-          backgroundColor: ColorPalette.white,
-          width: "100%",
-          marginBottom: 10,
-          padding: 10,
-          borderTopColor: ColorPalette.DarkGrey,
-          borderTopWidth: 1,
-        }}
-      >
-        <MessageBubble text={"Hey There!"} AI={true} />
-        <MessageBubble text={"Hey I'm Shahrom!"} />
-        <MessageBubble text={"Nice to meet you I'm Jay M. !"} AI={true} />
-        <MessageBubble text={"What does the M stand for?"} />
-        <MessageBubble text={"Mort."} AI={true} />
-        <MessageBubble text={"Oh..."} AI={false} />
-        <MessageBubble text={"right"} AI={false} />
-        <MessageBubble text={"Yeah"} AI={true} />
-      </ScrollView>
-      <TextInput
-        style={styleSheet.descriptionBox}
-        selectionColor={ColorPalette.Blue}
-        color={ColorPalette.DarkGrey}
-        placeholder={"New Message"}
-        placeholderTextColor={ColorPalette.DarkGrey + 80}
-        multiline
-        maxLength={MESSAGE_LENGTH_LIMIT}
-        numberOfLines={4}
-        value={message}
-        onChangeText={(text) => {
-          setMessage(text);
-        }}
-      />
-    </KeyboardAvoidingView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <View style={styleSheet.screenContainer}>
+          <TopBar
+            day={day}
+            onNextDay={nextDayHandler}
+            onPreviousDay={previousDayhandler}
+          />
+
+          <ScrollView
+            style={{
+              backgroundColor: ColorPalette.white,
+              width: "100%",
+              borderTopColor: ColorPalette.DarkGrey,
+              borderTopWidth: 1,
+              paddingBottom: 100,
+            }}
+          >
+            {history.map((item, index) => {
+              return (
+                <MessageBubble
+                  key={index}
+                  text={item.split(":")[1] ?? ""}
+                  name={item.split(":")[1]}
+                  AI={item.split(":")[0] == "Jay" ? true : false}
+                />
+              );
+            })}
+          </ScrollView>
+          <View
+            style={{
+              width: "100%",
+              height: 20,
+              backgroundColor: "transparent",
+            }}
+          />
+          <View
+            style={{
+              width: "95%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <TextInput
+              style={styleSheet.descriptionBox}
+              selectionColor={ColorPalette.Blue}
+              color={ColorPalette.DarkGrey}
+              placeholder={"New Message"}
+              placeholderTextColor={ColorPalette.DarkGrey + 80}
+              multiline
+              maxLength={MESSAGE_LENGTH_LIMIT}
+              numberOfLines={4}
+              value={message}
+              onChangeText={(text) => {
+                setMessage(text);
+              }}
+            />
+            <MyButton
+              bgColor={"transparent"}
+              width={"15%"}
+              height={30}
+              borderRadius={30}
+              onPress={onPressSend}
+            >
+              <Ionicons
+                name="send-outline"
+                color={ColorPalette.Orange}
+                size={30}
+              />
+            </MyButton>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styleSheet = StyleSheet.create({
+  topBar: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
   screenContainer: {
-    marginTop: 80,
+    marginTop: 10,
+    marginBottom: 100,
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: ColorPalette.white,
@@ -111,24 +275,23 @@ const styleSheet = StyleSheet.create({
     fontFamily: Fonts.Regular,
     borderColor: ColorPalette.DarkGrey + 50,
     borderWidth: 1,
-    height: "20%",
+    height: "100%",
     paddingHorizontal: 10,
-    marginHorizontal: 20,
-    marginBottom: 20,
     textAlignVertical: "center",
     textAlign: "left",
     borderRadius: 10,
-    width: "95%",
+    width: "80%",
   },
   chatBubbleContainer: {
     maxWidth: "70%",
     backgroundColor: ColorPalette.chatBubble,
     borderRadius: 10,
-    marginBottom: 10,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
   chatMessage: {
     fontFamily: Fonts.Medium,
-    fontSize: 12,
+    fontSize: 16,
     margin: 10,
     textAlign: "left",
   },
