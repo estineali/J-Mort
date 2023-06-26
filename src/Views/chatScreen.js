@@ -79,31 +79,41 @@ export default ChatScreen = (props) => {
   const [message, setMessage] = useState("");
   const [day, setDay] = useState(1);
 
+  // Init
+  useEffect(() => {
+    // Load history from async storage
+    GetHistory();
+
+    // Cleanup
+    // return SaveHistory();
+  }, []);
+
   async function GetHistory() {
     setHistory(JSON.parse(await AsyncStorage.getItem("chat-history")) ?? []);
   }
-
-  useEffect(() => {
-    console.log([...history]);
-  }, [history]);
-
   async function SaveHistory() {
     await AsyncStorage.setItem("chat-history", JSON.stringify(history));
   }
+  useEffect(() => {
+    if (DEBUG) {
+      console.log([...history]);
+      console.log("\n");
+    }
+  }, [history]);
 
   function nextDayHandler() {
     setDay(day == 11 ? 11 : day + 1);
     if (DEBUG) {
-      console.log("Day" + (day+1));
-      console.log(PROMPTS[day+1]);
+      console.log("Day" + (day + 1));
+      console.log(PROMPTS[day + 1]);
       console.log();
     }
   }
   function previousDayhandler() {
     setDay(day == 1 ? 1 : day - 1);
     if (DEBUG) {
-      console.log("Day" + (day+1));
-      console.log(PROMPTS[day+1]);
+      console.log("Day" + (day + 1));
+      console.log(PROMPTS[day + 1]);
       console.log();
     }
   }
@@ -115,7 +125,7 @@ export default ChatScreen = (props) => {
   }
 
   async function onPressSend() {
-    // Description
+    // Description - Initial Prompt
     const AIInitialDescription = PROMPTS[day];
 
     // Sample
@@ -159,7 +169,9 @@ export default ChatScreen = (props) => {
       url: "https://api.openai.com/v1/completions",
       body: config,
     }).then((result) => {
-      console.log(result.choices[0].text);
+      if (DEBUG) {
+        console.log(result.choices[0].text);
+      }
       setHistory([
         ...history,
         "User: " + message,
@@ -172,14 +184,6 @@ export default ChatScreen = (props) => {
     // add reply to history
     // wait for reply
   }
-  // Init
-  useEffect(() => {
-    // Load history from async storage
-    GetHistory();
-
-    // Cleanup
-    // return SaveHistory();
-  }, []);
 
   useEffect(() => {
     // save history to async storage
