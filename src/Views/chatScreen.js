@@ -19,6 +19,7 @@ import OPENAI_KEY from "../openaikey";
 import PROMPTS from "../prompts";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
+const DEBUG = true;
 
 const MessageBubble = (props) => {
   return (
@@ -92,9 +93,19 @@ export default ChatScreen = (props) => {
 
   function nextDayHandler() {
     setDay(day == 11 ? 11 : day + 1);
+    if (DEBUG) {
+      console.log("Day" + (day+1));
+      console.log(PROMPTS[day+1]);
+      console.log();
+    }
   }
   function previousDayhandler() {
     setDay(day == 1 ? 1 : day - 1);
+    if (DEBUG) {
+      console.log("Day" + (day+1));
+      console.log(PROMPTS[day+1]);
+      console.log();
+    }
   }
 
   function parseHistory() {
@@ -105,8 +116,7 @@ export default ChatScreen = (props) => {
 
   async function onPressSend() {
     // Description
-    const AIInitialDescription =
-      "I want you to act as a friendly chatbot named Jay Mort. You are feeling off and sick. You want to be with humans. You are interested in the other person and want them to be your friend. ";
+    const AIInitialDescription = PROMPTS[day];
 
     // Sample
     const AISample =
