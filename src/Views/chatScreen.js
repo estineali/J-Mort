@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ResolveRequest } from "../Utils/serverutils";
 import OPENAI_KEY from "../openaikey";
 import PROMPTS from "../prompts";
+import { StatusBar } from "expo-status-bar";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
 const DEBUG = true;
@@ -28,11 +29,18 @@ const MessageBubble = (props) => {
         ...styleSheet.chatBubbleContainer,
         alignSelf: props.AI ? "flex-start" : "flex-end",
         backgroundColor: props.AI
-          ? ColorPalette.chatBubbleAI
+          ? ColorPalette.AIChatBubble[props.day]
           : ColorPalette.chatBubbleUser,
       }}
     >
-      <Text style={styleSheet.chatMessage}>{props.text}</Text>
+      <Text
+        style={{
+          ...styleSheet.chatMessage,
+          color: props.AI && props.day >= 4 && props.day <= 7 ? "white" : "black",
+        }}
+      >
+        {props.text}
+      </Text>
     </View>
   );
 };
@@ -40,6 +48,8 @@ const MessageBubble = (props) => {
 const TopBar = (props) => {
   return (
     <View style={styleSheet.topBar}>
+
+      {DEBUG && 
       <MyButton
         bgColor={ColorPalette.Orange + "F0"}
         width={35}
@@ -52,12 +62,13 @@ const TopBar = (props) => {
           color={ColorPalette.white}
           size={20}
         />
-      </MyButton>
+      </MyButton> }
 
       <Text style={{ fontFamily: Fonts.Bold, fontSize: 18 }}>
         Day {props.day ?? 1}
       </Text>
 
+{DEBUG && 
       <MyButton
         bgColor={ColorPalette.Orange + "F0"}
         width={35}
@@ -70,7 +81,7 @@ const TopBar = (props) => {
           color={ColorPalette.white}
           size={20}
         />
-      </MyButton>
+      </MyButton> }
     </View>
   );
 };
@@ -95,6 +106,8 @@ export default ChatScreen = (props) => {
     await AsyncStorage.setItem("chat-history", JSON.stringify(history));
   }
   useEffect(() => {
+    // save history to async storage
+    SaveHistory();
     if (DEBUG) {
       console.log([...history]);
       console.log("\n");
@@ -178,20 +191,14 @@ export default ChatScreen = (props) => {
         "Jay:" + result.choices[0].text,
       ]);
     });
+
     //Reset message
     setMessage("");
-
-    // add reply to history
-    // wait for reply
   }
-
-  useEffect(() => {
-    // save history to async storage
-    SaveHistory();
-  }, [history]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar hidden backgroundColor="auto" />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styleSheet.screenContainer}>
           <TopBar
@@ -202,7 +209,7 @@ export default ChatScreen = (props) => {
 
           <ScrollView
             style={{
-              backgroundColor: ColorPalette.white,
+              backgroundColor: ColorPalette.background[day],
               width: "100%",
               borderTopColor: ColorPalette.DarkGrey,
               borderTopWidth: 1,
@@ -216,6 +223,7 @@ export default ChatScreen = (props) => {
                   text={item.split(":")[1] ?? ""}
                   name={item.split(":")[1]}
                   AI={item.split(":")[0] == "Jay" ? true : false}
+                  day={day}
                 />
               );
             })}
@@ -273,7 +281,7 @@ const styleSheet = StyleSheet.create({
   topBar: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: DEBUG ? "space-between" : "center",
     alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 10,
@@ -283,7 +291,6 @@ const styleSheet = StyleSheet.create({
     marginBottom: 100,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: ColorPalette.white,
     height: "100%",
     width: "100%",
   },
@@ -303,7 +310,6 @@ const styleSheet = StyleSheet.create({
   },
   chatBubbleContainer: {
     maxWidth: "70%",
-    backgroundColor: ColorPalette.chatBubble,
     borderRadius: 10,
     marginHorizontal: 10,
     marginTop: 10,
