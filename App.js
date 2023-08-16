@@ -1,5 +1,5 @@
 import AppLoading from "expo-app-loading";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
 
 import {
   useFonts,
@@ -23,8 +23,7 @@ import {
   Urbanist_900Black_Italic,
 } from "@expo-google-fonts/urbanist";
 
-
-import WelcomeScreen from "./src/Views/StartScreen";
+import Screens from "./src/appNavigation";
 export default function App() {
   let [fontsLoaded] = useFonts({
     Urbanist_100Thin,
@@ -49,11 +48,11 @@ export default function App() {
   if (!fontsLoaded) {
     // Refactor: Replace with splash screen
     return <AppLoading />;
-  } 
+  }
 
-  return(
+  return (
     <NavigationContainer>
-      <WelcomeScreen />
+      <Screens />
     </NavigationContainer>
   );
 }
