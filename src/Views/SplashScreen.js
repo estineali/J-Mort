@@ -7,7 +7,7 @@ import SeparatorComponent from "../Utils/Spacer";
 
 export default SplashScreen = (props) => {
   function startHandler() {
-    props.navigation.navigate("chat-screen");
+    props.navigation.navigate("homepage-chats-index");
   }
 
   return (
