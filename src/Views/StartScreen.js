@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import ColorPalette from "../Utils/ColorPalette";
 import Fonts from "../Utils/Fonts";
 import { MyButton } from "../Utils/Buttons";
-import { useState } from "react";
+import SeparatorComponent from "../Utils/Spacer";
 
 export default SplashScreen = (props) => {
   function startHandler() {
@@ -12,9 +12,12 @@ export default SplashScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.titleStyle}>Jay M.</Text>
+      <StatusBar backgroundColor="auto" />
+      <Text style={styles.titleStyle}>Jay</Text>
+      <SeparatorComponent space={"40%"} />
       <MyButton
-        bgColor={ColorPalette.DarkGrey}
+        bgColor={"transparent"}
+        borderColor={ColorPalette.white}
         width={"90%"}
         height={50}
         borderRadius={10}
@@ -22,7 +25,17 @@ export default SplashScreen = (props) => {
       >
         <Text style={styles.buttonText}>Start</Text>
       </MyButton>
-      <StatusBar style="auto" />
+
+      <Text
+        style={{
+          color: ColorPalette.white,
+          fontFamily: Fonts.BodyText,
+          fontSize: 11,
+          textAlign: "center"
+        }}
+      >
+        A Prototype by Femke Kocken & M. Shahrom Ali.
+      </Text>
     </SafeAreaView>
   );
 };
@@ -30,14 +43,13 @@ export default SplashScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: ColorPalette.white,
+    backgroundColor: ColorPalette.black,
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: "15%",
   },
 
   titleStyle: {
-    color: ColorPalette.DarkGrey,
+    color: ColorPalette.white,
     fontFamily: Fonts.Medium,
     fontSize: 40,
   },

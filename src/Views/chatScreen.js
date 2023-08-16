@@ -11,7 +11,6 @@ import {
 import ColorPalette from "../Utils/ColorPalette";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Fonts from "../Utils/Fonts";
-import Spacer from "../Utils/Spacer";
 import { MyButton } from "../Utils/Buttons";
 import { Ionicons } from "@expo/vector-icons";
 import { ResolveRequest } from "../Utils/serverutils";
@@ -36,7 +35,8 @@ const MessageBubble = (props) => {
       <Text
         style={{
           ...styleSheet.chatMessage,
-          color: props.AI && props.day >= 4 && props.day <= 7 ? "white" : "black",
+          color:
+            props.AI && props.day >= 4 && props.day <= 7 ? "white" : "black",
         }}
       >
         {props.text}
@@ -48,40 +48,47 @@ const MessageBubble = (props) => {
 const TopBar = (props) => {
   return (
     <View style={styleSheet.topBar}>
+      {DEBUG && (
+        <MyButton
+          bgColor={ColorPalette.Orange + "F0"}
+          width={35}
+          height={35}
+          borderRadius={10}
+          onPress={props.onPreviousDay}
+        >
+          <Ionicons
+            name="caret-back-outline"
+            color={ColorPalette.black}
+            size={20}
+          />
+        </MyButton>
+      )}
 
-      {DEBUG && 
-      <MyButton
-        bgColor={ColorPalette.Orange + "F0"}
-        width={35}
-        height={35}
-        borderRadius={10}
-        onPress={props.onPreviousDay}
+      <Text
+        style={{
+          fontFamily: Fonts.Bold,
+          fontSize: 18,
+          color: ColorPalette.white,
+        }}
       >
-        <Ionicons
-          name="caret-back-outline"
-          color={ColorPalette.white}
-          size={20}
-        />
-      </MyButton> }
-
-      <Text style={{ fontFamily: Fonts.Bold, fontSize: 18 }}>
         Day {props.day ?? 1}
       </Text>
 
-{DEBUG && 
-      <MyButton
-        bgColor={ColorPalette.Orange + "F0"}
-        width={35}
-        height={35}
-        borderRadius={10}
-        onPress={props.onNextDay}
-      >
-        <Ionicons
-          name="caret-forward-outline"
-          color={ColorPalette.white}
-          size={20}
-        />
-      </MyButton> }
+      {DEBUG && (
+        <MyButton
+          bgColor={ColorPalette.Orange + "F0"}
+          width={35}
+          height={35}
+          borderRadius={10}
+          onPress={props.onNextDay}
+        >
+          <Ionicons
+            name="caret-forward-outline"
+            color={ColorPalette.black}
+            size={20}
+          />
+        </MyButton>
+      )}
     </View>
   );
 };
@@ -197,7 +204,7 @@ export default ChatScreen = (props) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: ColorPalette.black }}>
       <StatusBar hidden backgroundColor="auto" />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styleSheet.screenContainer}>
@@ -214,6 +221,7 @@ export default ChatScreen = (props) => {
               borderTopColor: ColorPalette.DarkGrey,
               borderTopWidth: 1,
               paddingBottom: 100,
+              borderRadius: 10,
             }}
           >
             {history.map((item, index) => {
@@ -293,6 +301,7 @@ const styleSheet = StyleSheet.create({
     alignItems: "center",
     height: "100%",
     width: "100%",
+    backgroundColor: ColorPalette.black,
   },
 
   descriptionBox: {
