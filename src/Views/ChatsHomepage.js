@@ -10,6 +10,8 @@ import {
 import ColorPalette from "../Utils/ColorPalette";
 import Fonts from "../Utils/Fonts";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { keys } from "../Utils/asyncstorageKeys";
 
 const ChatItem = (props) => {
   return (
@@ -64,19 +66,16 @@ export default ChatsHomepage = (props) => {
   }
 
   function deleteChatHandler() {
-    //Delete chat
-    console.log("DEBUG:: Chat was deleted!");
+    AsyncStorage.removeItem(keys.chatHistory).then(() => {
+      Alert.alert("Chat Cleared");
+    });
   }
   function chatLongpressHandler() {
     //Show delete option -> resets history
-    Alert.alert(
-      "Delete Chat?",
-      "This action cannot be undone.",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", onPress: deleteChatHandler, style: "destructive" },
-      ]
-    );
+    Alert.alert("Clear Chat History?", "This action cannot be undone.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Clear", onPress: deleteChatHandler, style: "destructive" },
+    ]);
   }
 
   return (
