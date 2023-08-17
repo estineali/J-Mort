@@ -17,6 +17,7 @@ import { ResolveRequest } from "../Utils/serverutils";
 import OPENAI_KEY from "../openaikey";
 import PROMPTS from "../prompts";
 import { StatusBar } from "expo-status-bar";
+import Header from "../Utils/Header";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
 const DEBUG = true;
@@ -121,6 +122,10 @@ export default ChatScreen = (props) => {
     }
   }, [history]);
 
+  function backHandler() {
+    props.navigation.goBack();
+  }
+
   function nextDayHandler() {
     setDay(day == 11 ? 11 : day + 1);
     if (DEBUG) {
@@ -206,13 +211,14 @@ export default ChatScreen = (props) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: ColorPalette.black }}>
       <StatusBar hidden backgroundColor="auto" />
+      <Header back={backHandler} title={"Jay Mort"} />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styleSheet.screenContainer}>
-          <TopBar
+          {/* <TopBar
             day={day}
             onNextDay={nextDayHandler}
             onPreviousDay={previousDayhandler}
-          />
+          /> */}
 
           <ScrollView
             style={{
@@ -239,7 +245,7 @@ export default ChatScreen = (props) => {
           <View
             style={{
               width: "100%",
-              height: 20,
+              height: 30,
               backgroundColor: "transparent",
             }}
           />
@@ -295,9 +301,6 @@ const styleSheet = StyleSheet.create({
     marginBottom: 10,
   },
   screenContainer: {
-    marginTop: 10,
-    marginBottom: 100,
-    justifyContent: "space-between",
     alignItems: "center",
     height: "100%",
     width: "100%",
@@ -305,7 +308,7 @@ const styleSheet = StyleSheet.create({
   },
 
   descriptionBox: {
-    backgroundColor: ColorPalette.lightGrey + "85",
+    backgroundColor: ColorPalette.white,
     fontSize: 16,
     fontFamily: Fonts.Regular,
     borderColor: ColorPalette.DarkGrey + 50,
@@ -315,7 +318,7 @@ const styleSheet = StyleSheet.create({
     textAlignVertical: "center",
     textAlign: "left",
     borderRadius: 10,
-    width: "80%",
+    width: "90%",
   },
   chatBubbleContainer: {
     maxWidth: "70%",
