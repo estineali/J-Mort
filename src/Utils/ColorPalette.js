@@ -20,10 +20,10 @@ const ColorPalette = {
     "#5c5364",
     "#403947",
     "#98949d",
-    "#edeceb",
-    "#ffffff",
-    "#ffffff",
-    "#ffffff",
+    "#a2a2a2",
+    "#808080",
+    "#202020",
+    "#000000",
   ],
 
   sendButton: [
