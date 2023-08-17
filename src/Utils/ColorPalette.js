@@ -5,6 +5,7 @@ const ColorPalette = {
   DarkGrey: "#030303",
   Orange: "#FFA000",
   Blue: "#A210FF",
+  Red: "#EE3844",
 
   backgroundColor: "#f3f3f3",
   chatBubble: "#F4F4F4",
