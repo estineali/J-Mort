@@ -3,4 +3,5 @@ export const keys = {
   chatHistory: "chat-history",
   userName: "login-username",
   password: "login-password", // TODO: this should use secure storage
+  settings: "app-settings",
 };

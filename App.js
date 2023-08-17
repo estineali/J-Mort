@@ -24,6 +24,7 @@ import {
 } from "@expo-google-fonts/urbanist";
 
 import Screens from "./src/appNavigation";
+import { SettingsProvider } from "./src/Utils/settingsContext";
 export default function App() {
   let [fontsLoaded] = useFonts({
     Urbanist_100Thin,
@@ -51,8 +52,10 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Screens />
-    </NavigationContainer>
+    <SettingsProvider>
+      <NavigationContainer>
+        <Screens />
+      </NavigationContainer>
+    </SettingsProvider>
   );
 }

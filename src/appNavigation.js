@@ -11,24 +11,9 @@ import { keys } from "./Utils/asyncstorageKeys";
 const NavStack = createNativeStackNavigator();
 
 export default Screens = () => {
-  const [initRoute, setInitRoute] = useState("splash-screen");
-
-  async function loadAuth() {
-    const userName = await AsyncStorage.getItem(keys.userName);
-    
-    console.log("DEBUG:username is " + userName);
-    if (userName) {
-      setInitRoute("homepage-chats-index");
-    }
-  }
-
-  useEffect(() => {
-    loadAuth();
-  }, []);
-
   return (
     <NavStack.Navigator
-      initialRouteName={initRoute}
+      initialRouteName={"splash-screen"}
       screenOptions={{ headerShown: false }}
     >
       <NavStack.Screen name="splash-screen" component={SplashScreen} />

@@ -7,10 +7,12 @@ import { Ionicons } from "@expo/vector-icons";
 import Header from "../Utils/Header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { keys } from "../Utils/asyncstorageKeys";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { SettingsContext } from "../Utils/settingsContext";
 
 export default SettingsScreen = (props) => {
   const [username, setUsername] = useState("Jeff Malone");
+  const settingsC = useContext(SettingsContext);
 
   function backHandler() {
     props.navigation.goBack();
@@ -21,7 +23,7 @@ export default SettingsScreen = (props) => {
   }
 
   useEffect(() => {
-    // loadData();
+    loadData();
   }, []);
 
   function logoutHandler() {
