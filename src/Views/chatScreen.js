@@ -189,21 +189,23 @@ export default ChatScreen = (props) => {
       presence_penalty: 0,
     };
 
-    ResolveRequest({
-      token: OPENAI_KEY,
-      method: "POST",
-      url: "https://api.openai.com/v1/completions",
-      body: config,
-    }).then((result) => {
-      if (DEBUG) {
-        console.log(result.choices[0].text);
-      }
-      setHistory([
-        ...history,
-        "User: " + message,
-        "Jay:" + result.choices[0].text,
-      ]);
-    });
+    if (day < 10) {
+      ResolveRequest({
+        token: OPENAI_KEY,
+        method: "POST",
+        url: "https://api.openai.com/v1/completions",
+        body: config,
+      }).then((result) => {
+        if (DEBUG) {
+          console.log(result.choices[0].text);
+        }
+        setHistory([
+          ...history,
+          "User: " + message,
+          "Jay:" + result.choices[0].text,
+        ]);
+      });
+    }
 
     //Reset message
     setMessage("");
