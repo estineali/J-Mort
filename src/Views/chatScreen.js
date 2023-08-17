@@ -18,6 +18,7 @@ import OPENAI_KEY from "../openaikey";
 import PROMPTS from "../prompts";
 import { StatusBar } from "expo-status-bar";
 import Header from "../Utils/Header";
+import { keys } from "../Utils/asyncstorageKeys";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
 const DEBUG = true;
@@ -108,10 +109,10 @@ export default ChatScreen = (props) => {
   }, []);
 
   async function GetHistory() {
-    setHistory(JSON.parse(await AsyncStorage.getItem("chat-history")) ?? []);
+    setHistory(JSON.parse(await AsyncStorage.getItem(keys.chatHistory)) ?? []);
   }
   async function SaveHistory() {
-    await AsyncStorage.setItem("chat-history", JSON.stringify(history));
+    await AsyncStorage.setItem(keys.chatHistory, JSON.stringify(history));
   }
   useEffect(() => {
     // save history to async storage
@@ -299,6 +300,7 @@ const styleSheet = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 10,
+    marginTop: 10,
   },
   screenContainer: {
     alignItems: "center",
