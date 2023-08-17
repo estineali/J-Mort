@@ -6,6 +6,7 @@ import { MyButton } from "../Utils/Buttons";
 import SeparatorComponent from "../Utils/Spacer";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { keys } from "../Utils/asyncstorageKeys";
 
 
 export default SplashScreen = (props) => {
@@ -16,7 +17,10 @@ export default SplashScreen = (props) => {
   function loginHandler() {
   // setAuth info
 
+    AsyncStorage.setItem(keys.userName, username);
+    AsyncStorage.setItem(keys.password, password);
     props.navigation.navigate("homepage-chats-index");
+    
   }
 
 
@@ -72,7 +76,7 @@ export default SplashScreen = (props) => {
       <MyButton
         bgColor={"transparent"}
         borderColor={ColorPalette.white}
-        width={"90%"}
+        width={"60%"}
         height={50}
         borderRadius={10}
         onPress={loginHandler}
@@ -110,8 +114,8 @@ const stylesheet = StyleSheet.create({
 
   buttonText: {
     color: ColorPalette.white,
-    fontFamily: Fonts.Bold,
-    fontSize: 20,
+    fontFamily: Fonts.Heading,
+    fontSize: 24,
   },
 
   labelsStyle: {
