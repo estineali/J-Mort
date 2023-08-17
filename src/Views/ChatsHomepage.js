@@ -28,21 +28,21 @@ const ChatItem = (props) => {
       <View
         style={{
           borderRadius: 30,
-          width: 40,
-          height: 40,
+          width: 60,
+          height: 60,
           backgroundColor: ColorPalette.Orange,
           marginVertical: 10,
-          alignItems: "center",
+          alignItems: "center", 
           justifyContent: "center",
         }}
       >
-        <Ionicons name={"person"} color={ColorPalette.lightGrey} size={25} />
+        <Ionicons name={"skull-outline"} color={ColorPalette.lightGrey} size={30} />
       </View>
       <Text
         style={{
           color: ColorPalette.white,
           fontFamily: Fonts.Subheading,
-          fontSize: 18,
+          fontSize: 20,
           marginLeft: 10,
         }}
       >
