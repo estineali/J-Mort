@@ -214,11 +214,11 @@ export default ChatScreen = (props) => {
       <Header back={backHandler} title={"Jay Mort"} />
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styleSheet.screenContainer}>
-          {/* <TopBar
+          <TopBar
             day={day}
             onNextDay={nextDayHandler}
             onPreviousDay={previousDayhandler}
-          /> */}
+          />
 
           <ScrollView
             style={{

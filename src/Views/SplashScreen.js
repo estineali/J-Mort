@@ -13,8 +13,8 @@ export default SplashScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="auto" />
+      <SeparatorComponent space={"20%"} />
       <Text style={styles.titleStyle}>Jay</Text>
-      <SeparatorComponent space={"40%"} />
       <MyButton
         bgColor={"transparent"}
         borderColor={ColorPalette.white}
