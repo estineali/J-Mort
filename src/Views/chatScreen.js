@@ -215,7 +215,10 @@ export default ChatScreen = (props) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: ColorPalette.black }}>
       <StatusBar hidden backgroundColor="auto" />
       <Header back={backHandler} title={"Jay Mort"} />
-      <KeyboardAvoidingView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
         <View style={styleSheet.screenContainer}>
           <TopBar
             day={day}
@@ -227,11 +230,10 @@ export default ChatScreen = (props) => {
             style={{
               backgroundColor: ColorPalette.background[day],
               width: "100%",
-              borderTopColor: ColorPalette.DarkGrey,
-              borderTopWidth: 1,
-              paddingBottom: 100,
-              borderRadius: 10,
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
             }}
+            snapToEnd={true}
           >
             {history.map((item, index) => {
               return (
@@ -247,28 +249,21 @@ export default ChatScreen = (props) => {
           </ScrollView>
           <View
             style={{
-              width: "100%",
-              height: 30,
-              backgroundColor: "transparent",
-            }}
-          />
-          <View
-            style={{
-              width: "95%",
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
+              marginBottom: 30,
+              backgroundColor: ColorPalette.black,
+              marginHorizontal: 10,
             }}
           >
             <TextInput
-              style={styleSheet.descriptionBox}
+              style={styleSheet.messageInputBox}
               selectionColor={ColorPalette.Blue}
-              color={ColorPalette.DarkGrey}
+              color={ColorPalette.white}
               placeholder={"New Message"}
-              placeholderTextColor={ColorPalette.DarkGrey + 80}
-              multiline
+              placeholderTextColor={ColorPalette.white + 80}
               maxLength={MESSAGE_LENGTH_LIMIT}
-              numberOfLines={4}
               value={message}
               onChangeText={(text) => {
                 setMessage(text);
@@ -276,7 +271,7 @@ export default ChatScreen = (props) => {
             />
             <MyButton
               bgColor={"transparent"}
-              width={"15%"}
+              width={45}
               height={45}
               borderRadius={30}
               onPress={onPressSend}
@@ -311,17 +306,15 @@ const styleSheet = StyleSheet.create({
     backgroundColor: ColorPalette.black,
   },
 
-  descriptionBox: {
-    backgroundColor: ColorPalette.white,
+  messageInputBox: {
+    backgroundColor: ColorPalette.black,
     fontSize: 16,
-    fontFamily: Fonts.Regular,
-    borderColor: ColorPalette.DarkGrey + 50,
-    borderWidth: 1,
+    fontFamily: Fonts.SemiBold,
     height: "100%",
-    paddingHorizontal: 10,
-    textAlignVertical: "center",
+    alignItems: "center",
+    alignContent: "center",
     textAlign: "left",
-    borderRadius: 10,
+    borderRadius: 0,
     width: "90%",
   },
   chatBubbleContainer: {
@@ -329,6 +322,7 @@ const styleSheet = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
     marginTop: 10,
+    marginBottom: 10,
   },
   chatMessage: {
     fontFamily: Fonts.Medium,
