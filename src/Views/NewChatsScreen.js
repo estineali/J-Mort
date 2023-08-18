@@ -86,8 +86,6 @@ const stylesheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderWidth: 1,
-    borderColor: "black",
     marginBottom: 20,
     marginLeft: 10,
   },

@@ -125,13 +125,9 @@ const stylesheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderWidth: 1,
-    borderColor: "black",
     marginTop: 20,
     marginHorizontal: 20,
     paddingBottom: 10,
-    borderBottomColor: ColorPalette.white + "20",
-    borderBottomWidth: 1,
   },
   userNameDescContainer: {
     flexDirection: "column",

@@ -19,7 +19,7 @@ export const SettingsProvider = (props) => {
       darkmode: darkmode,
       debug: debug,
     };
-    AsyncStorage.setItem(keys.settings, settings);
+    AsyncStorage.setItem(keys.settings, JSON.stringify(settings));
   }
 
   useEffect(() => {
