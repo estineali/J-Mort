@@ -22,4 +22,10 @@ export default bots = [
     icon: "barbell-outline",
     color: ColorPalette.Red,
   },
+  {
+    name: "M. Wick",
+    description: "You wanted me back. I'm back. ",
+    color: ColorPalette.DarkGrey,
+    icon: "skull"
+  }
 ];

@@ -2,7 +2,7 @@ const ColorPalette = {
   white: "#FFFFFF",
   black: "#000000",
   lightGrey: "#F4F4F4",
-  DarkGrey: "#030303",
+  DarkGrey: "#333333",
   Orange: "#FFA000",
   Blue: "#A210FF",
   Red: "#EE3844",
