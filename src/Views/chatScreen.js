@@ -181,6 +181,24 @@ export default ChatScreen = (props) => {
           "Jay:" + result.choices[0].text,
         ]);
       });
+    } else if (day == 11) {
+      config.prompt = AIChatHistory + AIInitialDescription;
+      ResolveRequest({
+        token: OPENAI_KEY,
+        method: "POST",
+        url: "https://api.openai.com/v1/completions",
+        body: config,
+      }).then((result) => {
+        if (DEBUG) {
+          console.log(result.choices[0].text);
+        }
+
+        setHistory([
+          ...history,
+          "User: " + message,
+          "Jay:" + result.choices[0].text,
+        ]);
+      });
     }
 
     //Reset message
