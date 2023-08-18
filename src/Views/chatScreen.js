@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   ScrollView,
+  Pressable,
   KeyboardAvoidingView,
 } from "react-native";
 import ColorPalette from "../Utils/ColorPalette";
@@ -49,23 +50,12 @@ const MessageBubble = (props) => {
 
 const TopBar = (props) => {
   return (
-    <View style={styleSheet.topBar}>
-      {DEBUG && (
-        <MyButton
-          bgColor={ColorPalette.Orange + "F0"}
-          width={35}
-          height={35}
-          borderRadius={10}
-          onPress={props.onPreviousDay}
-        >
-          <Ionicons
-            name="caret-back-outline"
-            color={ColorPalette.black}
-            size={20}
-          />
-        </MyButton>
-      )}
-
+    <Pressable
+      onPress={DEBUG ? props.onNextDay : null}
+      onLongPress={DEBUG ? props.onPreviousDay : null}
+      delayLongPress={300}
+      style={styleSheet.topBar}
+    >
       <Text
         style={{
           fontFamily: Fonts.Bold,
@@ -75,23 +65,7 @@ const TopBar = (props) => {
       >
         Day {props.day ?? 1}
       </Text>
-
-      {DEBUG && (
-        <MyButton
-          bgColor={ColorPalette.Orange + "F0"}
-          width={35}
-          height={35}
-          borderRadius={10}
-          onPress={props.onNextDay}
-        >
-          <Ionicons
-            name="caret-forward-outline"
-            color={ColorPalette.black}
-            size={20}
-          />
-        </MyButton>
-      )}
-    </View>
+    </Pressable>
   );
 };
 export default ChatScreen = (props) => {
@@ -99,13 +73,8 @@ export default ChatScreen = (props) => {
   const [message, setMessage] = useState("");
   const [day, setDay] = useState(1);
 
-  // Init
   useEffect(() => {
-    // Load history from async storage
     GetHistory();
-
-    // Cleanup
-    // return SaveHistory();
   }, []);
 
   async function GetHistory() {
@@ -117,10 +86,7 @@ export default ChatScreen = (props) => {
   useEffect(() => {
     // save history to async storage
     SaveHistory();
-    if (DEBUG) {
-      console.log([...history]);
-      console.log("\n");
-    }
+    showHistory();
   }, [history]);
 
   function backHandler() {
@@ -148,6 +114,13 @@ export default ChatScreen = (props) => {
     // Returns a list
     // put history into one long narrative form i.e. a list
     // To be displayed
+  }
+
+  function showHistory() {
+    if (DEBUG) {
+      console.log([...history]);
+      console.log("\n");
+    }
   }
 
   async function onPressSend() {
@@ -247,16 +220,7 @@ export default ChatScreen = (props) => {
               );
             })}
           </ScrollView>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 30,
-              backgroundColor: ColorPalette.black,
-              marginHorizontal: 10,
-            }}
-          >
+          <View style={styleSheet.messagebar}>
             <TextInput
               style={styleSheet.messageInputBox}
               selectionColor={ColorPalette.Blue}
@@ -293,7 +257,7 @@ const styleSheet = StyleSheet.create({
   topBar: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: DEBUG ? "space-between" : "center",
+    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 10,
@@ -329,5 +293,13 @@ const styleSheet = StyleSheet.create({
     fontSize: 16,
     margin: 10,
     textAlign: "left",
+  },
+  messagebar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 30,
+    backgroundColor: ColorPalette.black,
+    marginHorizontal: 10,
   },
 });
