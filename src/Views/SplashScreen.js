@@ -10,12 +10,12 @@ import { keys } from "../Utils/asyncstorageKeys";
 
 
 export default SplashScreen = (props) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("JohnWick");
+  const [password, setPassword] = useState("babayaga");
 
 
   function loginHandler() {
-  // setAuth info
+  // setAuth info 
 
     AsyncStorage.setItem(keys.userName, username);
     AsyncStorage.setItem(keys.password, password);
