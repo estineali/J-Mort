@@ -77,17 +77,18 @@ export default ChatScreen = (props) => {
     GetHistory();
   }, []);
 
+  useEffect(() => {
+    // save history to async storage
+    SaveHistory();
+    showHistory();
+  }, [history]);
+
   async function GetHistory() {
     setHistory(JSON.parse(await AsyncStorage.getItem(keys.chatHistory)) ?? []);
   }
   async function SaveHistory() {
     await AsyncStorage.setItem(keys.chatHistory, JSON.stringify(history));
   }
-  useEffect(() => {
-    // save history to async storage
-    SaveHistory();
-    showHistory();
-  }, [history]);
 
   function backHandler() {
     props.navigation.goBack();
@@ -95,6 +96,7 @@ export default ChatScreen = (props) => {
 
   function nextDayHandler() {
     setDay(day == 11 ? 11 : day + 1);
+
     if (DEBUG) {
       console.log("Day" + (day + 1));
       console.log(PROMPTS[day + 1]);
@@ -103,6 +105,7 @@ export default ChatScreen = (props) => {
   }
   function previousDayhandler() {
     setDay(day == 1 ? 1 : day - 1);
+
     if (DEBUG) {
       console.log("Day" + (day + 1));
       console.log(PROMPTS[day + 1]);
