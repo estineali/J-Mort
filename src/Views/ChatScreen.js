@@ -20,6 +20,7 @@ import PROMPTS from "../prompts";
 import { StatusBar } from "expo-status-bar";
 import Header from "../Utils/Header";
 import { keys } from "../Utils/asyncstorageKeys";
+import { OPENAI_URL } from "../openaikey";
 
 const MESSAGE_LENGTH_LIMIT = 200; //chars
 const DEBUG = true;
@@ -117,6 +118,10 @@ export default ChatScreen = (props) => {
     // Returns a list
     // put history into one long narrative form i.e. a list
     // To be displayed
+    let hist = "";
+    history.forEach((element) => {
+      hist += element.name + ": " + element.message.trim() + "\n";
+    });
   }
 
   function showHistory() {
@@ -127,33 +132,23 @@ export default ChatScreen = (props) => {
   }
 
   async function onPressSend() {
-    // Description - Initial Prompt
     const AIInitialDescription = PROMPTS[day];
+    const AIChatHistory = parseHistory();
+    const LatestMessage = { name: "User", message: message, day: day };
 
-    // Sample
     const AISample =
       "A sample conversation is bellow: \nUser: Hello!\nJM: Hey there, I am Jay.\nUser: Hi Jay, How are you doing today?\nJay: I've seen better days, how are you?\n\nNow continue conversation based only on the messages that follow now.\n\n";
-
-    // History
-    const AIChatHistory = history.join("\n");
-
-    // New Message
-    const LatestMessage = "User: " + message;
 
     // prompt ending - prevents user's sentence completion
     const promptEnding = "\nJay:";
 
-    setHistory([...history, "User: " + message]);
-
-    // ** next day
+    setHistory([...history, LatestMessage]);
 
     // Send to Open AI
-    const compiledPrompt =
-      AIInitialDescription +
-      AISample +
-      AIChatHistory +
-      LatestMessage +
-      promptEnding;
+    let compiledPrompt = AIInitialDescription + AISample + AIChatHistory;
+    compiledPrompt += LatestMessage.name + ": " + LatestMessage.message + "\n";
+
+    compiledPrompt += promptEnding;
 
     const config = {
       model: "text-davinci-003",
@@ -165,44 +160,31 @@ export default ChatScreen = (props) => {
       presence_penalty: 0,
     };
 
-    if (day < 10) {
-      ResolveRequest({
-        token: OPENAI_KEY,
-        method: "POST",
-        url: "https://api.openai.com/v1/completions",
-        body: config,
-      }).then((result) => {
-        if (DEBUG) {
-          console.log(result.choices[0].text);
-        }
-        setHistory([
-          ...history,
-          "User: " + message,
-          "Jay:" + result.choices[0].text,
-        ]);
-      });
-    } else if (day == 11) {
-      config.prompt = AIChatHistory + AIInitialDescription;
-      ResolveRequest({
-        token: OPENAI_KEY,
-        method: "POST",
-        url: "https://api.openai.com/v1/completions",
-        body: config,
-      }).then((result) => {
-        if (DEBUG) {
-          console.log(result.choices[0].text);
-        }
-
-        setHistory([
-          ...history,
-          "User: " + message,
-          "Jay:" + result.choices[0].text,
-        ]);
-      });
-    }
-
     //Reset message
     setMessage("");
+
+    if (day != 10) {
+      if (day == 11) {
+        config.prompt = AIChatHistory + AIInitialDescription;
+        config.max_tokens = 512;
+      }
+      const result = await ResolveRequest({
+        token: OPENAI_KEY,
+        method: "POST",
+        url: OPENAI_URL,
+        body: config,
+      });
+
+      const AIResponse = {
+        name: "Jay",
+        message: result.choices[0].text.trim(),
+        day: day,
+      };
+      setHistory([...history, LatestMessage, AIResponse]);
+      if (DEBUG) {
+        console.log("DEBUG:: " + result.choices[0].text);
+      }
+    }
   }
 
   return (
@@ -233,9 +215,9 @@ export default ChatScreen = (props) => {
               return (
                 <MessageBubble
                   key={index}
-                  text={item.split(":")[1] ?? ""}
-                  name={item.split(":")[1]}
-                  AI={item.split(":")[0] == "Jay" ? true : false}
+                  text={item.message}
+                  name={item.name}
+                  AI={item.name == "Jay" ? true : false}
                   day={day}
                 />
               );
