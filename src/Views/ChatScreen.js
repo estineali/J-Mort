@@ -189,7 +189,7 @@ export default ChatScreen = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: ColorPalette.black }}>
-      <StatusBar hidden backgroundColor="auto" />
+      <StatusBar hidden backgroundColor="transparent"/>
       <Header back={backHandler} title={"Jay Mort"} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
