@@ -1,4 +1,3 @@
-import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 
 import {
@@ -47,8 +46,7 @@ export default function App() {
     Urbanist_900Black_Italic,
   });
   if (!fontsLoaded) {
-    // Refactor: Replace with splash screen
-    return <AppLoading />;
+    return null;
   }
 
   return (

@@ -8,7 +8,7 @@ export default Header = (props) => {
     <View style={props.headerStyle ?? stylesheet.headerStyle}>
       {props.back && (
         <Pressable onPress={props.back}>
-          <Ionicons name={"arrow-back"} size={20} color={ColorPalette.white} />
+          <Ionicons name={"chevron-back"} size={20} color={ColorPalette.white} />
         </Pressable>
       )}
       <Text style={props.titleStyle ?? stylesheet.titleStyle}>
