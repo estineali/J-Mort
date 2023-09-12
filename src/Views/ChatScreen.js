@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -73,6 +73,7 @@ export default ChatScreen = (props) => {
   const [history, setHistory] = useState([]);
   const [message, setMessage] = useState("");
   const [day, setDay] = useState(1);
+  const messagesRef = useRef(null);
 
   useEffect(() => {
     GetHistory();
@@ -189,11 +190,11 @@ export default ChatScreen = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: ColorPalette.black }}>
-      <StatusBar hidden backgroundColor="transparent"/>
+      <StatusBar hidden backgroundColor="transparent" />
       <Header back={backHandler} title={"Jay Mort"} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={{ flex: 1, paddingBottom: 10 }}
       >
         <View style={styleSheet.screenContainer}>
           <TopBar
@@ -209,6 +210,11 @@ export default ChatScreen = (props) => {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
             }}
+            ref={messagesRef}
+            onContentSizeChange={() => messagesRef.current.scrollToEnd()}
+            onLayout={() =>
+              messagesRef.current.scrollToEnd({ options: { animated: false } })
+            }
             snapToEnd={true}
           >
             {history.map((item, index) => {
