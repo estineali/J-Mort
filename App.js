@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-
+import { StatusBar } from "expo-status-bar";
 import {
   useFonts,
   Urbanist_100Thin,
@@ -52,6 +52,8 @@ export default function App() {
   return (
     <SettingsProvider>
       <NavigationContainer>
+        <StatusBar hidden backgroundColor="transparent" />
+
         <Screens />
       </NavigationContainer>
     </SettingsProvider>
