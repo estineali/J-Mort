@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   Pressable,
+  Alert,
 } from "react-native";
 import Header from "../Utils/Header";
 import ColorPalette from "../Utils/ColorPalette";
@@ -34,8 +35,12 @@ export default NewChatsScreen = (props) => {
     props.navigation.goBack();
   }
 
-  function newChatHandler() {
-    props.navigation.navigate("chat-screen");
+  function newChatHandler(bot_index) {
+    if (bots[bot_index].name == bots[0].name) {
+      props.navigation.navigate("chat-screen");
+    } else {
+      Alert.alert("Jay", `${bots[bot_index].name} ${bots[bot_index].message}.`)
+    }
   }
 
   return (
@@ -53,7 +58,7 @@ export default NewChatsScreen = (props) => {
             description={bot.description}
             icon={bot.icon}
             color={bot.color}
-            onPress={newChatHandler}
+            onPress={() => newChatHandler(idx)}
           />
         );
       })}
