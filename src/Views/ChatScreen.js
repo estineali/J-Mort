@@ -231,6 +231,9 @@ export default ChatScreen = (props) => {
           </ScrollView>
           <View style={styleSheet.messagebar}>
             <TextInput
+              onSubmitEditing={() => {
+                onPressSend();
+              }}
               style={styleSheet.messageInputBox}
               selectionColor={ColorPalette.Blue}
               color={ColorPalette.white}
