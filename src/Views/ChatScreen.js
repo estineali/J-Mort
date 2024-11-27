@@ -8,6 +8,7 @@ import {
   ScrollView,
   Pressable,
   KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import ColorPalette from "../Utils/ColorPalette";
 import AsyncStorage from "@react-native-async-storage/async-storage";
